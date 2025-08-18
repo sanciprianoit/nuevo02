@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_induccion_emple_capacitador,induccion_emple.capacitador.access,model_induccion_emple_capacitador,base.group_user,1,1,1,1
+access_induccion_emple_asignacion,induccion_emple.asignacion.access,model_induccion_emple_asignacion,base.group_user,1,1,1,1
+access_induccion_tipo,induccion.tipo.access,model_induccion_tipo,base.group_user,1,1,1,1
+access_induccion_item,induccion.item.access,model_induccion_item,base.group_user,1,1,1,1
+access_capacitacion_tipo,access_capacitacion_tipo.tipo.access,model_capacitacion_tipo,base.group_user,1,1,1,1

@@ -1,0 +1,17 @@
+<odoo>
+    <record id="action_asignacion_induccion" model="ir.actions.act_window">
+        <field name="name">Asignación de Inducción</field>
+        <field name="res_model">induccion_emple.asignacion</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('tipo_registro', '=', 'induccion')]</field>
+        <field name="context">{'default_tipo_registro': 'induccion'}</field>
+    </record>
+
+    <record id="action_asignacion_capacitacion" model="ir.actions.act_window">
+        <field name="name">Asignación de Capacitación</field>
+        <field name="res_model">induccion_emple.asignacion</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('tipo_registro', '=', 'capacitacion')]</field>
+        <field name="context">{'default_tipo_registro': 'capacitacion'}</field>
+    </record>
+</odoo>

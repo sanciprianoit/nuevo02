@@ -1,0 +1,32 @@
+<odoo>
+    <report 
+        id="asignacion_induccion_report"
+        string="Imprimir Asignación de Inducción"
+        model="induccion_emple.asignacion"
+        report_type="qweb-pdf"
+        name="induccion_emple.asignacion_report_template"
+        file="induccion_emple.asignacion_report_template"
+        print_report_name="'Asignacion_Induccion_' + object.control_numero"
+    />
+
+    <template id="asignacion_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <div class="page">
+                    <h2>Asignación de Inducción</h2>
+                    <p><strong>Número de Control:</strong> <t t-esc="o.control_numero"/></p>
+                    <p><strong>Tipo de Inducción:</strong> <t t-esc="o.tipo_induccion_id.name"/></p>
+                    <p><strong>Fecha de Asignación:</strong> <t t-esc="o.fecha_asignacion"/></p>
+                    <p><strong>Empleados Asignados:</strong>
+                        <t t-foreach="o.empleado_ids" t-as="emp">
+                            <span t-esc="emp.name"/>, 
+                        </t>
+                    </p>
+                    <p><strong>Capacitador/Instructor:</strong> <t t-esc="o.capacitador_id.name"/></p>
+                    <p><strong>Descripción:</strong> <t t-esc="o.descripcion"/></p>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>
+

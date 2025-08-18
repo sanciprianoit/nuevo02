@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Form View for Capacitador -->
+        <record id="view_capacitador_form" model="ir.ui.view">
+            <field name="name">induccion_emple.capacitador.form</field>
+            <field name="model">induccion_emple.capacitador</field>
+            <field name="arch" type="xml">
+                <form string="Capacitador/Instructor">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="employee_id" options="{'no_create': true, 'no_create_edit': true}"/>
+                                <field name="es_externo" invisible="1"/>
+                                <!-- TODOS LOS ATTRS ELIMINADOS AQUÍ -->
+                                <field name="nombre"/>
+                                <field name="cedula"/>
+                                <field name="cargo"/>
+                                <field name="sucursal"/>
+                            </group>
+                            <group>
+                                <field name="tipo_rol" widget="radio"/>
+                                <field name="empresa_externa"/>
+                                <field name="phone"/>
+                                <field name="email"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Notas Adicionales">
+                                <field name="descripcion"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View for Capacitador -->
+        <record id="view_capacitador_tree" model="ir.ui.view">
+            <field name="name">induccion_emple.capacitador.tree</field>
+            <field name="model">induccion_emple.capacitador</field>
+            <field name="arch" type="xml">
+                <list string="Capacitadores/Instructores">
+                    <field name="display_name"/>
+                    <field name="tipo_rol"/>
+                    <field name="cedula"/>
+                    <field name="cargo"/>
+                    <field name="sucursal"/>
+                    <field name="empresa_externa" optional="hide"/>
+                    <field name="phone"/>
+                    <field name="email"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Action for Capacitador -->
+        <record id="action_capacitador" model="ir.actions.act_window">
+            <field name="name">Capacitadores/Instructores</field>
+            <field name="res_model">induccion_emple.capacitador</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    ¡Crea tu primer capacitador o instructor!
+                </p>
+                <p>
+                    Puedes seleccionar un empleado existente de Odoo o registrar un capacitador externo.
+                </p>
+            </field>
+        </record>
+
+        <!-- NO SE INCLUYEN DEFINICIONES DE MENUITEM AQUÍ, YA QUE SE DEFINEN EN views/menu.xml -->
+
+    </data>
+</odoo>

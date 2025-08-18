@@ -1,0 +1,49 @@
+<odoo>
+    <!-- Vista de árbol para tipos de inducción -->
+    <record id="view_tipo_induccion_tree" model="ir.ui.view">
+        <field name="name">tipo.induccion.list</field>
+        <field name="model">induccion.tipo</field>
+        <field name="type">list</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="activo"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vista de formulario para tipos de inducción -->
+    <record id="view_tipo_induccion_form" model="ir.ui.view">
+        <field name="name">tipo.induccion.form</field>
+        <field name="model">induccion.tipo</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="descripcion"/>
+                        <field name="activo"/>
+                    </group>
+                    <field name="item_ids">
+                        <list editable="bottom">
+                            <field name="name"/>
+                            <field name="descripcion"/>
+                            <field name="obligatorio"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Acción de ventana -->
+    <record id="action_tipo_induccion" model="ir.actions.act_window">
+        <field name="name">Tipos de Inducción</field>
+        <field name="res_model">induccion.tipo</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    
+
+</odoo>

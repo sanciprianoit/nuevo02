@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_report_asignacion_capacitacion" model="ir.actions.report">
+            <field name="name">Planilla de Capacitación</field>
+            <field name="model">induccion_emple.asignacion</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">induccion_emple.report_asignacion_capacitacion_document</field>
+            <field name="report_file">induccion_emple.report_asignacion_capacitacion_document</field>
+            <field name="print_report_name">'Planilla de Capacitación - %s' % (object.control_numero)</field>
+            <field name="binding_model_id" ref="induccion_emple.model_induccion_emple_asignacion"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <template id="report_asignacion_capacitacion_document">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-set="company" t-value="user.company_id"/>
+                    <t t-call="web.external_layout_standard">
+                        <div class="page">
+                            <h2 style="text-align:center;">ASIGNACIÓN DE CAPACITACIÓN</h2>
+                            <table class="table table-sm info-table" style="width:100%; margin-bottom:20px;">
+                                <tr>
+                                    <th style="width:30%;">Número de Control:</th>
+                                    <td style="width:20%;"><span t-field="o.control_numero"/></td>
+                                    <th style="width:20%; text-align:right;">Fecha de Asignación:</th>
+                                    <td style="width:30%; text-align:right;"><span t-field="o.fecha_asignacion"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Tipo de Capacitación:</th>
+                                    <td colspan="3"><span t-field="o.tipo_capacitacion_id.name"/></td>
+                                </tr>
+                            </table>
+                            <table class="table table-sm info-table" style="width:100%; margin-bottom:20px;">
+                                <tr>
+                                    <th style="width:20%;">Capacitador:</th>
+                                    <td style="width:30%;"><span t-field="o.capacitador_id.display_name"/></td>
+                                    <th style="width:20%; text-align:right;">Empresa Externa:</th>
+                                    <td style="width:30%; text-align:right;"><span t-field="o.capacitador_empresa_externa"/></td>
+                                </tr>
+                            </table>
+                            <h3>Participantes</h3>
+                            <table class="table table-sm" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Cargo</th>
+                                        <th>Departamento</th>
+                                        <th>Teléfono</th>
+                                        <th>Correo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="o.empleado_ids" t-as="empleado">
+                                        <tr>
+                                            <td><span t-field="empleado.name"/></td>
+                                            <td><span t-field="empleado.job_id.name"/></td>
+                                            <td><span t-field="empleado.department_id.name"/></td>
+                                            <td><span t-field="empleado.work_phone"/></td>
+                                            <td><span t-field="empleado.work_email"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                            <div style="margin-top:20px;">
+                                <strong>Descripción:</strong>
+                                <div><span t-field="o.descripcion"/></div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

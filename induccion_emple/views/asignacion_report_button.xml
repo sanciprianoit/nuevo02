@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Extensión de la vista de formulario de Asignación de Inducción -->
+        <record id="view_asignacion_form_inherit_report_button" model="ir.ui.view">
+            <field name="name">induccion_emple.asignacion.form.inherit.report.button</field>
+            <field name="model">induccion_emple.asignacion</field>
+            <field name="inherit_id" ref="induccion_emple.view_asignacion_form_induccion"/> <!-- Este es el ID de tu vista base -->
+            <field name="arch" type="xml">
+                <!-- Añade un header dentro del form para que aparezca el botón de impresión -->
+                <!-- El xpath busca el elemento 'form' y posiciona el 'header' justo dentro de él -->
+                <xpath expr="//form" position="inside">
+                    <header>
+                        <!-- Odoo automáticamente inyectará las acciones de reporte (botones de impresión) aquí.
+                             No necesitas añadir botones específicos para cada planilla.
+                             Con solo tener el <header>, Odoo lo gestiona. -->
+                    </header>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

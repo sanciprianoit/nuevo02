@@ -1,0 +1,19 @@
+<odoo>
+    <record id="seq_induccion_asignacion" model="ir.sequence">
+        <field name="name">Secuencia Numérica de Asignaciones</field>
+        <field name="code">induccion_emple.asignacion</field>
+        <field name="prefix">ASIG-</field>
+        <field name="padding">3</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+    </record>
+
+    <record id="seq_induccion_capacitacion" model="ir.sequence">
+        <field name="name">Secuencia Numérica de Capacitaciones</field>
+        <field name="code">induccion_emple.capacitacion</field>
+        <field name="prefix">CAP-</field>
+        <field name="padding">3</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+    </record>
+</odoo>

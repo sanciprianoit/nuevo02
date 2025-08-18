@@ -1,0 +1,60 @@
+<odoo>
+    <!-- Menú principal: Inducciones -->
+    <menuitem id="menu_induccion_root" name="Inducciones" sequence="10"/>
+
+    <menuitem 
+        id="menu_capacitador_root" 
+        name="Capacitadores/Instructores" 
+        parent="menu_induccion_root"
+        action="action_capacitador"
+        sequence="20"
+    />
+
+    <!-- Submenú: Asignación -->
+    <menuitem 
+        id="menu_asignacion_root" 
+        name="Asignación" 
+        parent="menu_induccion_root" 
+        sequence="30"
+    />
+
+    <menuitem 
+        id="menu_asignacion_induccion" 
+        name="Asignación de Inducción" 
+        parent="menu_asignacion_root"  
+        action="action_asignacion_induccion" 
+        sequence="10"
+    />
+
+    <menuitem 
+        id="menu_asignacion_capacitacion" 
+        name="Asignación de Capacitación" 
+        parent="menu_asignacion_root" 
+        action="action_asignacion_capacitacion"
+        sequence="20"
+    />
+
+    <!-- Submenú: Parámetro -->
+    <menuitem 
+        id="menu_parametro_induccion" 
+        name="Parámetro" 
+        parent="menu_induccion_root" 
+        sequence="40"
+    />
+
+    <menuitem 
+        id="menu_tipos_induccion" 
+        name="Tipos de Inducción" 
+        parent="menu_parametro_induccion"  
+        action="action_tipo_induccion" 
+        sequence="10"
+    />
+
+    <menuitem 
+        id="menu_tipos_capacitacion" 
+        name="Tipos de Capacitación" 
+        parent="menu_parametro_induccion" 
+        action="action_tipos_capacitacion"
+        sequence="20"
+    />
+</odoo>

@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Acción del Reporte para la Planilla 1: Ítems de Inducción -->
+        
+<record id="action_report_asignacion_items" model="ir.actions.report">
+    <field name="name">Planilla de Inducción (Ítems)</field>
+    <field name="model">induccion_emple.asignacion</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">induccion_reportes.report_asignacion_items_document</field>
+    <field name="report_file">induccion_reportes.report_asignacion_items_document</field>
+    <field name="print_report_name">'Planilla de Inducción - Ítems - %s' % (object.control_numero)</field>
+    <field name="binding_model_id" ref="induccion_emple.model_induccion_emple_asignacion"/>
+    <field name="binding_type">report</field>
+</record>
+
+        
+
+        <!-- Plantilla QWeb para la Planilla 1: Ítems de Inducción -->
+<template id="report_asignacion_items_document">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-set="company" t-value="user.company_id"/>
+            <t t-call="web.external_layout">
+                <div class="page">
+
+                    <!-- 🏛️ Membrete institucional -->
+                    <table style="width:100%; margin-bottom:20px; border:none;">
+                        <tr>
+                            <td style="width:20%; vertical-align:top;">
+                                <img t-att-src="'/web/image/res.company/%s/logo' % company.id" style="max-height:80px;"/>
+                            </td>
+                            <td style="width:80%; text-align:center;">
+                                <h2 style="margin:0;"><span t-field="company.name"/></h2>
+                                <p style="margin:0;">
+                                    <span t-field="company.street"/>
+                                    <t t-if="company.street2">, <span t-field="company.street2"/></t><br/>
+                                    <span t-field="company.city"/>, <span t-field="company.state_id.name"/> - <span t-field="company.zip"/><br/>
+                                    <t t-if="company.vat">RIF: <span t-field="company.vat"/> |</t>
+                                    Tel: <span t-field="company.phone"/> |
+                                    Email: <span t-field="company.email"/>
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- Título -->
+                    <div class="header-title">
+                        ASIGNACIÓN DE INDUCCIÓN
+                    </div>
+
+                    <!-- Detalles de la Asignación -->
+                    <div class="info-section">
+                        <h3>Detalles de la Asignación</h3>
+                        <table class="info-table">
+                            <tr>
+                                <th style="width:50%;">Número de Control:</th>
+                                <td style="width:25%;"><span t-field="o.control_numero"/></td>
+                                <th style="width:25%; text-align:right;">Fecha de Asignación:</th>
+                                <td style="width:25%; text-align:right;"><span t-field="o.fecha_asignacion"/></td>
+                            </tr>
+                            <tr>
+                                <th>Tipo de Inducción:</th>
+                                <td colspan="3"><span t-field="o.tipo_induccion_id.name"/></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- Datos del Instructor -->
+                    <div class="info-section">
+                        <h3>Datos del Instructor</h3>
+                        <table class="info-table">
+                            <tr>
+                                <th>Nombre:</th>
+                                <td><span t-if="o.capacitador_id" t-field="o.capacitador_id.nombre"/>
+                                    <span t-if="not o.capacitador_id">N/A</span></td>
+                                <th>Cargo:</th>
+                                <td><span t-field="o.capacitador_id.cargo"/></td>
+                                <th>Correo:</th>
+                                <td><span t-field="o.capacitador_id.email"/></td>
+                                <th>Teléfono:</th>
+                                <td><span t-field="o.capacitador_id.phone"/></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- Ítems -->
+                    <div class="item-list">
+                        <h3>Ítems de la Inducción</h3>
+                        <table class="info-table">
+                            <thead>
+                                <tr>
+                                    <th>Ítem</th>
+                                    <th>Descripción</th>
+                                    <th>Obligatorio</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="o.tipo_induccion_id.item_ids" t-as="item">
+                                    <tr>
+                                        <td><span t-field="item.name"/></td>
+                                        <td><span t-field="item.descripcion"/></td>
+                                        <td>
+                                            <span t-if="item.obligatorio">Sí</span>
+                                            <span t-else="">No</span>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+
+
+<record id="action_report_asignacion_participantess" model="ir.actions.report">
+    <field name="name">Planilla de Inducción (Participantes)</field>
+    <field name="model">induccion_emple.asignacion</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">induccion_reportes.report_asignacion_participantes_document</field>
+    <field name="report_file">induccion_reportes.report_asignacion_participantes_document</field>
+    <field name="print_report_name">'Planilla de Inducción - Participantes - %s' % (object.control_numero)</field>
+    <field name="binding_model_id" ref="induccion_emple.model_induccion_emple_asignacion"/>
+    <field name="binding_type">report</field>
+</record>
+
+<template id="report_asignacion_participantes_document">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-set="company" t-value="user.company_id"/>
+            <t t-call="web.external_layout">
+                <div class="page" style="padding:20px; font-size:12px;">
+
+                    <!-- 🏛️ Membrete institucional -->
+                    <table style="width:100%; margin-bottom:20px; border:none;">
+                        <tr>
+                            <td style="width:20%; vertical-align:top;">
+                                <img t-att-src="'/web/image/res.company/%s/logo' % company.id" style="max-height:80px;"/>
+                            </td>
+                            <td style="width:80%; text-align:center;">
+                                <h2 style="margin:0;"><span t-field="company.name"/></h2>
+                                <p style="margin:0;">
+                                    <span t-field="company.street"/>
+                                    <t t-if="company.street2">, <span t-field="company.street2"/></t><br/>
+                                    <span t-field="company.city"/>, <span t-field="company.state_id.name"/> - <span t-field="company.zip"/><br/>
+                                    <t t-if="company.vat">RIF: <span t-field="company.vat"/> |</t>
+                                    Tel: <span t-field="company.phone"/> |
+                                    Email: <span t-field="company.email"/>
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- Título -->
+                    <div class="header-title">
+                        ASIGNACIÓN DE INDUCCIÓN
+                    </div>
+
+                    <!-- Detalles de la Asignación -->
+                    <div class="info-section">
+                        <h3>Detalles de la Asignación</h3>
+                        <table class="info-table">
+                            <tr>
+                                <th style="width:50%;">Número de Control:</th>
+                                <td style="width:25%;"><span t-field="o.control_numero"/></td>
+                                <th style="width:25%; text-align:right;">Fecha de Asignación:</th>
+                                <td style="width:25%; text-align:right;"><span t-field="o.fecha_asignacion"/></td>
+                            </tr>
+                            <tr>
+                                <th>Tipo de Inducción:</th>
+                                <td colspan="3"><span t-field="o.tipo_induccion_id.name"/></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- Datos del Instructor -->
+                    <div class="info-section">
+                        <h3>Datos del Instructor</h3>
+                        <table class="info-table">
+                            <tr>
+                                <th style="width:20%;">Nombre:</th>
+                                <td style="width:30%;"><span t-field="o.capacitador_id.display_name"/></td>
+                                <th style="width:20%; text-align:right;">Cargo:</th>
+                                <td style="width:30%; text-align:right;"><span t-field="o.capacitador_id.cargo"/></td>
+                            </tr>
+                            <tr>
+                                <th>Teléfono:</th>
+                                <td><span t-field="o.capacitador_id.phone"/></td>
+                                <th style="text-align:right;">Correo:</th>
+                                <td style="text-align:right;"><span t-field="o.capacitador_id.email"/></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- Participantes -->
+                    <div class="participant-list">
+                        <h3>Participantes Asignados</h3>
+                        <t t-if="o.empleado_ids">
+                            <table class="info-table">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre Completo</th>
+                                        <th>Cargo</th>
+                                        <th>Departamento</th>
+                                        <th>Teléfono</th>
+                                        <th>Correo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="o.empleado_ids" t-as="empleado">
+                                        <tr>
+                                            <td><span t-field="empleado.name"/></td>
+                                            <td><span t-field="empleado.job_id.name"/></td>
+                                            <td><span t-field="empleado.department_id.name"/></td>
+                                            <td><span t-field="empleado.work_phone"/></td>
+                                            <td><span t-field="empleado.work_email"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+                        <t t-else="">
+                            <p>No hay participantes asignados a esta inducción.</p>
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+
+
+    </data>
+</odoo>
+
