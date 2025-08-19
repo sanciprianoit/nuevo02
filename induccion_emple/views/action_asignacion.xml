@@ -14,4 +14,15 @@
         <field name="domain">[('tipo_registro', '=', 'capacitacion')]</field>
         <field name="context">{'default_tipo_registro': 'capacitacion'}</field>
     </record>
+    
+    
+<record id="action_acta_induccion" model="ir.actions.act_window">
+    <field name="name">Acta de Inducción</field>
+    <field name="res_model">induccion.registro</field>
+    <field name="view_mode">list,form</field>
+    <field name="domain">[('tipo_registro', '=', 'Induccion')]</field>
+    <field name="view_id" ref="view_induccion_registro_tree"/>
+</record>
+
+
 </odoo>

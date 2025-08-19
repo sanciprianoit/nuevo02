@@ -1,0 +1,36 @@
+<odoo>
+ <record id="view_induccion_registro_tree" model="ir.ui.view">
+  <field name="name">induccion.registro.list</field>
+  <field name="model">induccion.registro</field>
+  <field name="arch" type="xml">
+    <list create="false">
+    <field name="control_numero"/>
+      <field name="nombre"/>
+      <field name="fecha"/>
+      <field name="capacitador_id"/>
+    </list>
+  </field>
+</record>
+
+
+<record id="view_induccion_registro_form" model="ir.ui.view">
+    <field name="name">induccion.registro.form</field>
+    <field name="model">induccion.registro</field>
+    <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <field name="nombre"/>
+                    <field name="fecha"/>
+                    <field name="tipo_induccion_id"/>
+                    <field name="empleados_ids"/>
+                    <field name="capacitador_id"/>
+                    <field name="empresa_externa"/>
+                    <field name="descripcion"/>
+                </group>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+</odoo>
