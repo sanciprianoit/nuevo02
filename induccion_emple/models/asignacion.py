@@ -84,7 +84,7 @@ class Asignacion(models.Model):
                 'empresa_externa': asignacion.capacitador_empresa_externa,
                 'descripcion': asignacion.descripcion,
                 'tipo_registro': 'Induccion',
-                'asignacion_id': asignacion.id  # ← Enlace directo
+                'asignacion_id': asignacion.id
             })
 
         return asignacion

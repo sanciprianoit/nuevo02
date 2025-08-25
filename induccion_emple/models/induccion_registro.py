@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models, fields, api
 
 class InduccionRegistro(models.Model):
     _name = 'induccion.registro'
@@ -33,3 +33,23 @@ class InduccionRegistro(models.Model):
         store=True,
         readonly=True
     )
+
+    # Ítems copiados (si se usan)
+    item_ids = fields.One2many(
+        'induccion.item',
+        'registro_id',
+        string='Items Copiados'
+    )
+
+    # ✅ Ítems del tipo de inducción (solo lectura, no se copian)
+    tipo_item_ids = fields.One2many(
+        'induccion.item',
+        compute='_compute_tipo_item_ids',
+        string='Items del Tipo de Inducción',
+        store=False
+    )
+
+    @api.depends('tipo_induccion_id')
+    def _compute_tipo_item_ids(self):
+        for record in self:
+            record.tipo_item_ids = record.tipo_induccion_id.item_ids
