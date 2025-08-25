@@ -12,7 +12,13 @@ class InduccionRegistro(models.Model):
         ('Otro', 'Otro')
     ], string='Tipo de Registro', required=True)
 
-    empleados_ids = fields.Many2many('hr.employee', string='Participantes')
+    # 👥 Participantes con estatus
+    linea_empleado_ids = fields.One2many(
+        'induccion.linea.empleado',
+        'induccion_id',
+        string='Participantes con Estatus'
+    )
+
     capacitador_id = fields.Many2one('induccion_emple.capacitador', string='Capacitador')
     empresa_externa = fields.Char(
         string='Empresa Externa',
@@ -34,14 +40,12 @@ class InduccionRegistro(models.Model):
         readonly=True
     )
 
-    # Ítems copiados (si se usan)
     item_ids = fields.One2many(
         'induccion.item',
         'registro_id',
         string='Items Copiados'
     )
 
-    # ✅ Ítems del tipo de inducción (solo lectura, no se copian)
     tipo_item_ids = fields.One2many(
         'induccion.item',
         compute='_compute_tipo_item_ids',

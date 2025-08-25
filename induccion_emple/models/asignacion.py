@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 class Asignacion(models.Model):
     _name = 'induccion_emple.asignacion'
@@ -65,6 +66,7 @@ class Asignacion(models.Model):
 
     @api.model
     def create(self, vals):
+        # Generar número de control
         if vals.get('control_numero', 'Nuevo') == 'Nuevo':
             if vals.get('tipo_registro') == 'capacitacion':
                 seq = self.env['ir.sequence'].next_by_code('induccion_emple.capacitacion')
@@ -74,12 +76,12 @@ class Asignacion(models.Model):
 
         asignacion = super(Asignacion, self).create(vals)
 
+        # Crear registro de inducción y participantes
         if asignacion.tipo_registro == 'induccion':
-            self.env['induccion.registro'].create({
+            registro = self.env['induccion.registro'].create({
                 'nombre': asignacion.tipo_nombre,
                 'fecha': asignacion.fecha_asignacion,
                 'tipo_induccion_id': asignacion.tipo_induccion_id.id,
-                'empleados_ids': [(6, 0, asignacion.empleado_ids.ids)],
                 'capacitador_id': asignacion.capacitador_id.id,
                 'empresa_externa': asignacion.capacitador_empresa_externa,
                 'descripcion': asignacion.descripcion,
@@ -87,12 +89,23 @@ class Asignacion(models.Model):
                 'asignacion_id': asignacion.id
             })
 
+            # Crear participantes con contexto autorizado
+            for empleado in asignacion.empleado_ids:
+                self.env['induccion.linea.empleado'].with_context(
+                    allow_create_linea_empleado=True
+                ).create({
+                    'induccion_id': registro.id,
+                    'empleado_id': empleado.id,
+                    'asistio': False,          # Por defecto no asistió
+                    'estatus': 'no_asistio'    # Estado inicial
+                })
+
         return asignacion
 
     @api.constrains('tipo_registro', 'tipo_induccion_id', 'tipo_capacitacion_id')
     def _check_tipo_registro(self):
         for record in self:
             if record.tipo_registro == 'induccion' and not record.tipo_induccion_id:
-                raise models.ValidationError("El tipo de inducción es obligatorio para una inducción.")
+                raise ValidationError("El tipo de inducción es obligatorio para una inducción.")
             if record.tipo_registro == 'capacitacion' and not record.tipo_capacitacion_id:
-                raise models.ValidationError("El tipo de capacitación es obligatorio para una capacitación.")
+                raise ValidationError("El tipo de capacitación es obligatorio para una capacitación.")

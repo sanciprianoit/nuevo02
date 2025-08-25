@@ -4,3 +4,4 @@ from . import tipo_capacitacion
 from . import capacitador
 from . import asignacion
 from . import induccion_registro
+from . import induccion_linea_empleado

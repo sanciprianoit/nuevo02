@@ -4,7 +4,7 @@
         <field name="name">induccion.registro.list</field>
         <field name="model">induccion.registro</field>
         <field name="arch" type="xml">
-            <list create="false">
+            <list create="false" delete="false" edit="false">
                 <field name="control_numero"/>
                 <field name="nombre"/>
                 <field name="fecha"/>
@@ -18,27 +18,28 @@
         <field name="name">induccion.registro.form</field>
         <field name="model">induccion.registro</field>
         <field name="arch" type="xml">
-            <form string="Inducción" create="false" edit="false" delete="false" mode="readonly">
+            <form string="Inducción">
                 <sheet>
                     <group>
                         <field name="nombre" readonly="1"/>
                         <field name="fecha"/>
-                        
-                        <!-- Mostrar solo nombres de empleados -->
-                        <field name="empleados_ids" readonly="1">
-                            <list>
-                                <field name="name"/>
-                            </list>
-                        </field>
-
                         <field name="capacitador_id" readonly="1"/>
                         <field name="empresa_externa"/>
                         <field name="descripcion"/>
                     </group>
+<group string="Participantes">
+    <field name="linea_empleado_ids">
+        <list editable="top" create="false" delete="false">
+            <field name="empleado_id" readonly="1"/>
+            <field name="asistio"/>
+            <field name="estatus"/>
+        </list>
+    </field>
+</group>
 
-                    <!-- Sección para mostrar solo los nombres de los ítems -->
+
                     <group string="Items del Tipo de Inducción">
-                        <field name="tipo_item_ids" readonly="1" create="false">
+                        <field name="tipo_item_ids" readonly="1">
                             <list>
                                 <field name="name"/>
                             </list>
