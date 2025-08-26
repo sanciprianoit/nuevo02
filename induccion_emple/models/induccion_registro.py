@@ -12,7 +12,7 @@ class InduccionRegistro(models.Model):
         ('Otro', 'Otro')
     ], string='Tipo de Registro', required=True)
 
-    # 👥 Participantes con estatus
+    # Participantes con estatus
     linea_empleado_ids = fields.One2many(
         'induccion.linea.empleado',
         'induccion_id',
@@ -40,12 +40,16 @@ class InduccionRegistro(models.Model):
         readonly=True
     )
 
-    item_ids = fields.One2many(
-        'induccion.item',
+    # ----------------------------
+    # Items del registro (modelo intermedio)
+    # ----------------------------
+    item_line_ids = fields.One2many(
+        'induccion.linea.item',
         'registro_id',
-        string='Items Copiados'
+        string='Items del Registro'
     )
 
+    # Items del tipo de inducción (solo lectura)
     tipo_item_ids = fields.One2many(
         'induccion.item',
         compute='_compute_tipo_item_ids',
@@ -57,3 +61,27 @@ class InduccionRegistro(models.Model):
     def _compute_tipo_item_ids(self):
         for record in self:
             record.tipo_item_ids = record.tipo_induccion_id.item_ids
+
+    # ----------------------------
+    # Crear items del registro automáticamente al crear la inducción
+    # ----------------------------
+    @api.model
+    def create(self, vals):
+        record = super().create(vals)
+        if record.tipo_induccion_id:
+            for item in record.tipo_induccion_id.item_ids:
+                self.env['induccion.linea.item'].with_context(
+                    allow_create_linea_item=True
+                ).create({
+                    'registro_id': record.id,
+                    'item_id': item.id,
+                    'estatus': 'pendiente'
+                })
+        return record
+
+    # ----------------------------
+    # Eliminar registro de inducción junto con items en cascada
+    # ----------------------------
+    def unlink(self):
+        # Los items asociados se eliminan automáticamente por ondelete='cascade'
+        return super().unlink()

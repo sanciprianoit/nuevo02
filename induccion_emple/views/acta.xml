@@ -27,24 +27,30 @@
                         <field name="empresa_externa"/>
                         <field name="descripcion"/>
                     </group>
-<group string="Participantes">
-    <field name="linea_empleado_ids">
-        <list editable="top" create="false" delete="false">
-            <field name="empleado_id" readonly="1"/>
-            <field name="asistio"/>
-            <field name="estatus"/>
-        </list>
-    </field>
-</group>
 
-
-                    <group string="Items del Tipo de Inducción">
-                        <field name="tipo_item_ids" readonly="1">
-                            <list>
-                                <field name="name"/>
+                    <!-- Participantes con estatus -->
+                    <group string="Participantes">
+                        <field name="linea_empleado_ids">
+                            <list editable="top" create="false" delete="false">
+                                <field name="empleado_id" readonly="1"/>
+                                <field name="asistio"/>
+                                <field name="estatus"/>
                             </list>
                         </field>
                     </group>
+
+                    <!-- Items del registro con estatus editable -->
+                    <group string="Items del Registro">
+                        <field name="item_line_ids">
+                            <list editable="top" create="false" delete="false">
+                                <field name="item_id" readonly="1"/>
+                                <field name="estatus"/>
+                            </list>
+                        </field>
+                    </group>
+
+                   
+
                 </sheet>
             </form>
         </field>
