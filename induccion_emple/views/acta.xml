@@ -30,14 +30,16 @@
 
                     <!-- Participantes con estatus -->
                     <group string="Participantes">
-                        <field name="linea_empleado_ids">
-                            <list editable="top" create="false" delete="false">
-                                <field name="empleado_id" readonly="1"/>
-                                <field name="asistio"/>
-                                <field name="estatus"/>
-                            </list>
-                        </field>
-                    </group>
+    <field name="linea_empleado_ids">
+        <list editable="top" create="false" delete="false">
+            <field name="empleado_id" readonly="1"/>
+            <field name="asistio"/>
+            <field name="estatus"/>
+            <field name="observacion" attrs="{'invisible': [('estatus', '!=', 'justificado')]}"/>
+        </list>
+    </field>
+</group>
+
 
                     <!-- Items del registro con estatus editable -->
                     <group string="Items del Registro">
