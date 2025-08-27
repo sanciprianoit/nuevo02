@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.exceptions import UserError
 
 class InduccionRegistro(models.Model):
     _name = 'induccion.registro'
@@ -12,7 +13,6 @@ class InduccionRegistro(models.Model):
         ('Otro', 'Otro')
     ], string='Tipo de Registro', required=True)
 
-    # Participantes con estatus
     linea_empleado_ids = fields.One2many(
         'induccion.linea.empleado',
         'induccion_id',
@@ -40,16 +40,12 @@ class InduccionRegistro(models.Model):
         readonly=True
     )
 
-    # ----------------------------
-    # Items del registro (modelo intermedio)
-    # ----------------------------
     item_line_ids = fields.One2many(
         'induccion.linea.item',
         'registro_id',
         string='Items del Registro'
     )
 
-    # Items del tipo de inducción (solo lectura)
     tipo_item_ids = fields.One2many(
         'induccion.item',
         compute='_compute_tipo_item_ids',
@@ -62,9 +58,6 @@ class InduccionRegistro(models.Model):
         for record in self:
             record.tipo_item_ids = record.tipo_induccion_id.item_ids
 
-    # ----------------------------
-    # Crear items del registro automáticamente al crear la inducción
-    # ----------------------------
     @api.model
     def create(self, vals):
         record = super().create(vals)
@@ -79,9 +72,14 @@ class InduccionRegistro(models.Model):
                 })
         return record
 
-    # ----------------------------
-    # Eliminar registro de inducción junto con items en cascada
-    # ----------------------------
     def unlink(self):
-        # Los items asociados se eliminan automáticamente por ondelete='cascade'
+        for record in self:
+            if record.linea_empleado_ids:
+                raise UserError("No se puede eliminar un registro con empleados asignados.")
         return super().unlink()
+
+    def action_imprimir_acta(self):
+        """Genera un PDF del registro de inducción"""
+        if not self.linea_empleado_ids:
+            raise UserError("No hay participantes para imprimir el acta.")
+        return self.env.ref('induccion_emple.action_report_acta_induccion').report_action(self)
