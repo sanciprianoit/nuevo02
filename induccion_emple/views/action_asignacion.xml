@@ -21,7 +21,7 @@
     <field name="res_model">induccion.registro</field>
     <field name="view_mode">list,form</field>
     <field name="domain">[('tipo_registro', '=', 'Induccion')]</field>
-    <field name="view_id" ref="view_induccion_registro_tree"/>
+   
 </record>
 
 
