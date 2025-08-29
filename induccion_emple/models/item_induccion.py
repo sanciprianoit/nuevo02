@@ -12,3 +12,10 @@ class ItemInduccion(models.Model):
         required=True
     )
     obligatorio = fields.Boolean(string='Obligatorio', default=True)
+
+    # 👇 Este es el campo que debes agregar
+    registro_id = fields.Many2one(
+        'induccion.registro',
+        string='Registro de Inducción',
+        ondelete='cascade'
+    )

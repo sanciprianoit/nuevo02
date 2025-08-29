@@ -4,3 +4,6 @@ access_induccion_emple_asignacion,induccion_emple.asignacion.access,model_inducc
 access_induccion_tipo,induccion.tipo.access,model_induccion_tipo,base.group_user,1,1,1,1
 access_induccion_item,induccion.item.access,model_induccion_item,base.group_user,1,1,1,1
 access_capacitacion_tipo,access_capacitacion_tipo.tipo.access,model_capacitacion_tipo,base.group_user,1,1,1,1
+access_induccion_registro,access.induccion.registro,model_induccion_registro,base.group_user,1,1,1,1
+access_induccion_linea_empleado,induccion.linea.empleado.access,model_induccion_linea_empleado,base.group_user,1,1,1,1
+access_induccion_linea_item,induccion.linea.item.access,model_induccion_linea_item,base.group_user,1,1,1,1

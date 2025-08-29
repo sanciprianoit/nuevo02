@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Acción del Reporte de Acta de Inducción -->
+        <record id="action_report_acta_induccion" model="ir.actions.report">
+            <field name="name">Acta de Inducción</field>
+            <field name="model">induccion.registro</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">induccion_emple.report_acta_induccion_template</field>
+            <field name="report_file">induccion_emple.report_acta_induccion_template</field>
+            <field name="print_report_name">'Acta_Induccion_' + object.control_numero</field>
+            <field name="binding_model_id" ref="induccion_emple.model_induccion_registro"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- Plantilla QWeb del Reporte -->
+        <template id="report_acta_induccion_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="registro">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <h2 style="text-align:center;">Acta de Inducción</h2>
+
+                            <p><strong>Número de Control:</strong> <t t-esc="registro.control_numero or 'N/A'"/></p>
+                            <p><strong>Nombre:</strong> <t t-esc="registro.nombre or 'N/A'"/></p>
+                            <p><strong>Fecha:</strong> <t t-esc="registro.fecha or 'N/A'"/></p>
+                            <p><strong>Capacitador:</strong> <t t-esc="registro.capacitador_id.display_name or 'N/A'"/></p>
+                            <p><strong>Empresa Externa:</strong> <t t-esc="registro.empresa_externa or 'N/A'"/></p>
+                            <p><strong>Descripción:</strong> <t t-esc="registro.descripcion or 'N/A'"/></p>
+
+                            <h3>Participantes</h3>
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Empleado</th>
+                                        <th>Asistió</th>
+                                        <th>Estatus</th>
+                                        <th>Observación</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="registro.linea_empleado_ids" t-as="linea">
+                                        <tr>
+                                            <td><t t-esc="linea.empleado_id.name or 'N/A'"/></td>
+                                            <td><t t-esc="linea.asistio and 'Sí' or 'No'"/></td>
+                                            <td><t t-esc="linea.estatus or 'N/A'"/></td>
+                                            <td><t t-esc="linea.observacion or ''"/></td>
+                                        </tr>
+                                    </t>
+                                    <t t-if="not registro.linea_empleado_ids">
+                                        <tr>
+                                            <td colspan="4" style="text-align:center;">No hay participantes asignados.</td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+
+                            <h3>Items del Registro</h3>
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Estatus</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="registro.item_line_ids" t-as="item">
+                                        <tr>
+                                            <td><t t-esc="item.item_id.name or 'N/A'"/></td>
+                                            <td><t t-esc="item.estatus or 'N/A'"/></td>
+                                        </tr>
+                                    </t>
+                                    <t t-if="not registro.item_line_ids">
+                                        <tr>
+                                            <td colspan="2" style="text-align:center;">No hay items registrados.</td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

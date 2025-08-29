@@ -22,6 +22,9 @@
     'views/asignacion_report_button.xml',
     'reports/asignacion_report.xml',
     'views/asignacion_capacitacion_views.xml',
+    'views/acta.xml',
+    'views/report_acta_induccion.xml',
+
 ],
 
      'assets': {
