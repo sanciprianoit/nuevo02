@@ -1,0 +1,54 @@
+<odoo>
+    <data>
+        <!-- Acción del reporte individual por participante -->
+        <record id="action_report_acta_participante" model="ir.actions.report">
+            <field name="name">Acta de Participante</field>
+            <field name="model">induccion.linea.empleado</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">induccion_emple.report_acta_participante_template</field>
+            <field name="report_file">induccion_emple.report_acta_participante_template</field>
+            <field name="print_report_name">'Acta_' + (object.empleado_id.name or 'N/A')</field>
+        </record>
+
+        <!-- Plantilla QWeb del reporte de participante -->
+        <template id="report_acta_participante_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="linea">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <h2 style="text-align:center;">Acta de Participante</h2>
+
+                            <p><strong>Empleado:</strong> <t t-esc="linea.empleado_id.name or 'N/A'"/></p>
+                            <p><strong>Inducción:</strong> <t t-esc="linea.induccion_id.nombre or 'N/A'"/></p>
+                            <p><strong>Fecha:</strong> <t t-esc="linea.induccion_id.fecha or 'N/A'"/></p>
+                            <p><strong>Capacitador:</strong> <t t-esc="linea.induccion_id.capacitador_id.display_name or 'N/A'"/></p>
+                            <p><strong>Asistió:</strong> <t t-esc="linea.asistio and 'Sí' or 'No'"/></p>
+                            <p><strong>Estatus:</strong> <t t-esc="linea.estatus or 'N/A'"/></p>
+                            <p><strong>Observación:</strong> <t t-esc="linea.observacion or 'N/A'"/></p>
+
+                            <!-- Tabla de Items de Inducción -->
+                            <h3>Items de Inducción</h3>
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Estatus</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="linea.item_ids" t-as="item">
+                                        <tr>
+                                            <td><t t-esc="item.item_id.name or 'N/A'"/></td>
+                                            <td><t t-esc="item.estatus or 'N/A'"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
