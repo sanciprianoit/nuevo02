@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <!-- Acción del reporte individual por participante -->
+        <record id="action_report_acta_individual" model="ir.actions.report">
+            <field name="name">Acta Individual de Capacitación</field>
+            <field name="model">induccion_emple.asistencia_participante</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">induccion_emple.report_acta_individual_template</field>
+            <field name="print_report_name">'Acta_' + (object.participante_id.name or 'N/A')</field>
+        </record>
+
+        <!-- Plantilla QWeb del reporte -->
+        <template id="report_acta_individual_template">
+            <!-- Definimos company para evitar KeyError en external_layout_standard -->
+            <t t-set="company" t-value="docs and docs[0].env.company or False"/>
+
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="linea">
+                    <t t-call="web.external_layout_standard">
+                        <div class="page">
+
+                            <h2 style="text-align:center;">ACTA DE PARTICIPANTE</h2>
+
+                            <!-- Datos del participante (NO EDITABLE) -->
+                            <table style="width:100%; margin-bottom:20px;">
+                                <tr>
+                                    <th>Participante:</th>
+                                    <td><t t-esc="linea.participante_id.name"/></td>
+                                    <th>Estatus:</th>
+                                    <td><t t-esc="dict(linea._fields['status'].selection).get(linea.status)"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Observación:</th>
+                                    <td colspan="3"><t t-esc="linea.observacion or 'N/A'"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Fecha de Ejecución:</th>
+                                    <td colspan="3"><t t-esc="linea.acta_id.fecha_ejecucion or 'No Generada'"/></td>
+                                </tr>
+                            </table>
+
+                            <!-- Datos del capacitador -->
+                            <h3>Datos del Capacitador</h3>
+                            <table style="width:100%; margin-bottom:20px;">
+                                <tr>
+                                    <th>Capacitador:</th>
+                                    <td><t t-esc="linea.acta_id.capacitador_id.display_name or 'No asignado'"/></td>
+                                    <th>Tipo de Capacitación:</th>
+                                    <td><t t-esc="linea.acta_id.tipo_id.name or ''"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Fecha de Asignación:</th>
+                                    <td><t t-esc="linea.acta_id.fecha or ''"/></td>
+                                    <th>Fecha de Ejecución:</th>
+                                    <td><t t-esc="linea.acta_id.fecha_ejecucion or ''"/></td>
+                                </tr>
+                            </table>
+
+                            <!-- Pautas impartidas -->
+                            <h3>Pautas Impartidas</h3>
+                            <ul>
+                                <t t-foreach="linea.acta_id.pauta_ids" t-as="pauta">
+                                    <li><strong><t t-esc="pauta.titulo"/>:</strong> <t t-esc="pauta.observacion"/></li>
+                                </t>
+                            </ul>
+
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>
