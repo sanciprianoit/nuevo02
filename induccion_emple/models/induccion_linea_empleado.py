@@ -5,6 +5,9 @@ class InduccionLineaEmpleado(models.Model):
     _name = 'induccion.linea.empleado'
     _description = 'Empleado en Inducción'
 
+    # ===========================
+    # Campos principales
+    # ===========================
     induccion_id = fields.Many2one('induccion.registro', string='Inducción', ondelete='cascade')
     empleado_id = fields.Many2one('hr.employee', string='Empleado', required=True)
     asistio = fields.Boolean(string="¿Asistió?")
@@ -17,9 +20,9 @@ class InduccionLineaEmpleado(models.Model):
     motivo = fields.Text(string="Motivo", help="Indique la razón cuando se seleccione 'Justificado'")
     observacion = fields.Text(string="Observación", help="Comentarios adicionales si el estatus es 'Justificado'")
 
-    # =====================================
-    # NUEVO: Número único de control
-    # =====================================
+    # ===========================
+    # Número de control único
+    # ===========================
     control_numero = fields.Char(
         string="Número de Control",
         readonly=True,
@@ -28,9 +31,17 @@ class InduccionLineaEmpleado(models.Model):
         default="Nuevo"
     )
 
-    # =====================================
-    # Campo computado para los items del participante
-    # =====================================
+    # ===========================
+    # Fecha de ejecución del acta
+    # ===========================
+    fecha_ejecucion = fields.Datetime(
+        string="Fecha de Ejecución del Acta",
+        readonly=True
+    )
+
+    # ===========================
+    # Items de inducción (relación)
+    # ===========================
     item_ids = fields.One2many(
         'induccion.linea.item',
         compute='_compute_item_ids',
@@ -47,9 +58,9 @@ class InduccionLineaEmpleado(models.Model):
             else:
                 record.item_ids = self.env['induccion.linea.item']
 
-    # =====================================
+    # ===========================
     # Reglas de negocio
-    # =====================================
+    # ===========================
     @api.onchange('asistio')
     def _onchange_asistio(self):
         for record in self:
@@ -86,11 +97,15 @@ class InduccionLineaEmpleado(models.Model):
     def unlink(self):
         raise ValidationError("No está permitido eliminar participantes.")
 
-    # =====================================
-    # Método para generar PDF individual
-    # =====================================
+    # ===========================
+    # Generar PDF individual
+    # ===========================
     def action_print_acta_individual(self):
-        """Genera el PDF solo de este participante"""
+        """Genera el PDF solo de este participante y guarda fecha de ejecución"""
         if not self:
             raise UserError("No hay participante seleccionado para imprimir el acta.")
+
+        # Guardar la fecha actual de ejecución
+        self.fecha_ejecucion = fields.Datetime.now()
+
         return self.env.ref('induccion_emple.action_report_acta_participante').report_action(self)

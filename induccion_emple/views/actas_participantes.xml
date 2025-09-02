@@ -7,7 +7,6 @@
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">induccion_emple.report_acta_participante_template</field>
             <field name="report_file">induccion_emple.report_acta_participante_template</field>
-            <!-- ✅ Ahora el PDF se descarga con el número de control -->
             <field name="print_report_name">'Acta_' + (object.control_numero or 'N/A')</field>
         </record>
 
@@ -19,7 +18,7 @@
                     <t t-call="web.external_layout_standard">
                         <div class="page">
 
-                            <!-- 🏛️ Membrete institucional -->
+                            <!-- Membrete institucional -->
                             <table style="width:100%; margin-bottom:20px; border:none;">
                                 <tr>
                                     <td style="text-align:center;">
@@ -42,31 +41,78 @@
                             <!-- Título principal -->
                             <h2 style="text-align:center;">ACTA DE PARTICIPANTE</h2>
 
-                            <!-- ✅ Datos generales del participante con número de control -->
+                            <!-- Datos generales del participante -->
                             <table class="table table-sm info-table" style="width:100%; margin-bottom:20px;">
                                 <tr>
-                                    <th style="width:20%;">N° Control:</th>
-                                    <td style="width:30%;"><span t-field="linea.control_numero"/></td>
-                                    <th style="width:20%;">Empleado:</th>
-                                    <td style="width:30%;"><span t-field="linea.empleado_id.name"/></td>
+                                    <th style="width:15%;">N° Control:</th>
+                                    <td style="width:25%;"><span t-field="linea.control_numero"/></td>
+                                    <th style="width:15%;">Empleado:</th>
+                                    <td style="width:25%;"><span t-field="linea.empleado_id.name"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Cargo:</th>
+                                    <td><t t-esc="linea.empleado_id.job_id and linea.empleado_id.job_id.name or ''"/></td>
+                                    <th>Departamento:</th>
+                                    <td><t t-esc="linea.empleado_id.department_id and linea.empleado_id.department_id.name or ''"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Teléfono:</th>
+                                    <td><t t-esc="linea.empleado_id.phone or ''"/></td>
+                                    <th>Correo:</th>
+                                    <td><t t-esc="linea.empleado_id.work_email or ''"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Documento de Identidad:</th>
+                                    <td colspan="3"><t t-esc="linea.empleado_id.identification_id or ''"/></td>
                                 </tr>
                                 <tr>
                                     <th>Inducción:</th>
                                     <td><span t-field="linea.induccion_id.nombre"/></td>
-                                    <th>Fecha:</th>
+                                    <th>Fecha de Inducción:</th>
                                     <td><span t-field="linea.induccion_id.fecha"/></td>
                                 </tr>
                                 <tr>
-                                    <th>Capacitador:</th>
-                                    <td><span t-field="linea.induccion_id.capacitador_id.display_name"/></td>
                                     <th>Estatus:</th>
                                     <td><span t-field="linea.estatus"/></td>
-                                </tr>
-                                <tr>
                                     <th>Asistió:</th>
                                     <td><t t-esc="linea.asistio and 'Sí' or 'No'"/></td>
+                                </tr>
+                                <tr>
                                     <th>Observación:</th>
-                                    <td><span t-field="linea.observacion"/></td>
+                                    <td colspan="3"><span t-field="linea.observacion"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Fecha de Ejecución del Acta:</th>
+                                    <td colspan="3">
+                                        <t t-esc="linea.fecha_ejecucion and linea.fecha_ejecucion.strftime('%d/%m/%Y %H:%M:%S') or 'No Generada'"/>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Datos del capacitador -->
+                            <h3>Datos del Capacitador</h3>
+                            <table class="table table-sm info-table" style="width:100%; margin-bottom:20px;">
+                                <tr>
+                                    <th style="width:20%;">Nombre:</th>
+                                    <td style="width:30%;"><t t-esc="linea.induccion_id.capacitador_id and linea.induccion_id.capacitador_id.display_name or 'No asignado'"/></td>
+                                    <th style="width:20%;">Cargo:</th>
+                                    <td style="width:30%;"><t t-esc="linea.induccion_id.capacitador_id and linea.induccion_id.capacitador_id.cargo or ''"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Departamento/Sucursal:</th>
+                                    <td><t t-esc="linea.induccion_id.capacitador_id and linea.induccion_id.capacitador_id.sucursal or ''"/></td>
+                                    <th>Teléfono:</th>
+                                    <td><t t-esc="linea.induccion_id.capacitador_id and linea.induccion_id.capacitador_id.phone or ''"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Correo:</th>
+                                    <td><t t-esc="linea.induccion_id.capacitador_id and linea.induccion_id.capacitador_id.email or ''"/></td>
+                                    <th>Empresa Externa:</th>
+                                    <td><t t-esc="linea.induccion_id.capacitador_id and linea.induccion_id.capacitador_id.empresa_externa or ''"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Documento de Identidad:</th>
+                                    <td colspan="3"><t t-esc="linea.induccion_id.capacitador_id and linea.induccion_id.capacitador_id.cedula or ''"/></td>
                                 </tr>
                             </table>
 
