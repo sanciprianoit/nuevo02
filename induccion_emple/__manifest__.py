@@ -24,6 +24,7 @@
     'views/asignacion_capacitacion_views.xml',
     'views/acta.xml',
     'views/report_acta_induccion.xml',
+    'views/actas_participantes.xml',
 
 ],
 

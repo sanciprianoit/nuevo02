@@ -19,13 +19,6 @@
         <field name="model">induccion.registro</field>
         <field name="arch" type="xml">
             <form string="Inducción" create="false">
-                <header>
-                    <button name="action_imprimir_acta"
-                            string="Imprimir Actas"
-                            type="object"
-                            class="btn-primary"/>
-                </header>
-
                 <sheet>
                     <group>
                         <field name="nombre" readonly="1"/>
@@ -43,6 +36,12 @@
                                 <field name="asistio"/>
                                 <field name="estatus"/>
                                 <field name="observacion" attrs="{'invisible': [('estatus', '!=', 'justificado')]}"/>
+
+                                <!-- Botón para imprimir acta individual -->
+                                <button name="action_print_acta_individual"
+                                        string="Imprimir Acta"
+                                        type="object"
+                                        class="btn-primary"/>
                             </list>
                         </field>
                     </group>

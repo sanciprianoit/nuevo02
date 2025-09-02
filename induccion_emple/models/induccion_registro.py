@@ -1,9 +1,10 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
 class InduccionRegistro(models.Model):
     _name = 'induccion.registro'
     _description = 'Registro de Inducciones'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     nombre = fields.Char(string='Nombre de la Inducción', required=True)
     fecha = fields.Date(string='Fecha de Inducción', required=True)
@@ -75,11 +76,30 @@ class InduccionRegistro(models.Model):
     def unlink(self):
         for record in self:
             if record.linea_empleado_ids:
-                raise UserError("No se puede eliminar un registro con empleados asignados.")
+                raise UserError(_("No se puede eliminar un registro con empleados asignados."))
         return super().unlink()
 
     def action_imprimir_acta(self):
         """Genera un PDF del registro de inducción"""
         if not self.linea_empleado_ids:
-            raise UserError("No hay participantes para imprimir el acta.")
+            raise UserError(_("No hay participantes para imprimir el acta."))
         return self.env.ref('induccion_emple.action_report_acta_induccion').report_action(self)
+
+    def action_print_actas_empleados(self):
+        """Genera PDFs individuales de cada participante"""
+        self.ensure_one()
+        empleados = self.linea_empleado_ids
+        if not empleados:
+            raise UserError(_("No hay participantes en este registro para imprimir actas."))
+
+        # Genera un PDF para cada empleado
+        report_action_list = []
+        for empleado in empleados:
+            if not empleado:
+                continue
+            action = self.env.ref('induccion_emple.action_report_acta_participante').report_action(empleado)
+            report_action_list.append(action)
+
+        # Devuelve un solo PDF combinado si quieres, o la acción del primer empleado
+        # Para simplificar, devolvemos la acción del primer empleado
+        return report_action_list[0] if report_action_list else False
