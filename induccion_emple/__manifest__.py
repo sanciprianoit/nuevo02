@@ -26,6 +26,8 @@
     'reports/asignacion_report.xml',
     'views/report_acta_induccion.xml',
     'views/actas_participantes.xml',
+    'views/reporte_acta_individual_template.xml',
+
 ],
 
 

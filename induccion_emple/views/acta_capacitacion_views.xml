@@ -32,13 +32,19 @@
                                 <field name="fecha_ejecucion"/>
                             </group>
                         </group>
+
                         <notebook>
                             <page string="Asistencia de Participantes">
                                 <field name="asistencia_ids">
-                                    <list editable="bottom" kanban_record_create="false" create="false">
+                                    <list editable="bottom" create="false">
                                         <field name="participante_id"/>
                                         <field name="status" widget="selection"/>
                                         <field name="observacion"/>
+                                        <!-- Botón individual por participante -->
+                                        <button name="imprimir_acta_individual"
+                                                type="object"
+                                                string="Imprimir"
+                                                class="btn-primary"/>
                                     </list>
                                 </field>
                             </page>
