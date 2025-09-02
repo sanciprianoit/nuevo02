@@ -7,3 +7,6 @@ access_capacitacion_tipo,access_capacitacion_tipo.tipo.access,model_capacitacion
 access_induccion_registro,access.induccion.registro,model_induccion_registro,base.group_user,1,1,1,1
 access_induccion_linea_empleado,induccion.linea.empleado.access,model_induccion_linea_empleado,base.group_user,1,1,1,1
 access_induccion_linea_item,induccion.linea.item.access,model_induccion_linea_item,base.group_user,1,1,1,1
+access_induccion_emple_acta_capacitacion,induccion_emple.acta_capacitacion.access,model_induccion_emple_acta_capacitacion,base.group_user,1,1,1,1
+access_asistencia_participante_user,Asistencia Participante User Access,induccion_emple.model_induccion_emple_asistencia_participante,base.group_user,1,1,1,1
+access_pauta_acta,Pautas Acta,model_induccion_emple_pauta_acta,base.group_user,1,1,1,1
