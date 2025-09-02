@@ -1,4 +1,5 @@
 <odoo>
+    <!-- Secuencia para Asignaciones -->
     <record id="seq_induccion_asignacion" model="ir.sequence">
         <field name="name">Secuencia Numérica de Asignaciones</field>
         <field name="code">induccion_emple.asignacion</field>
@@ -8,6 +9,7 @@
         <field name="number_increment">1</field>
     </record>
 
+    <!-- Secuencia para Capacitaciones -->
     <record id="seq_induccion_capacitacion" model="ir.sequence">
         <field name="name">Secuencia Numérica de Capacitaciones</field>
         <field name="code">induccion_emple.capacitacion</field>
@@ -17,6 +19,14 @@
         <field name="number_increment">1</field>
     </record>
 
-    
-
+    <!-- 🚀 Nueva secuencia para Actas de Participantes -->
+    <record id="seq_induccion_linea_empleado" model="ir.sequence">
+        <field name="name">Secuencia Acta de Participante</field>
+        <field name="code">induccion.linea.empleado.seq</field>
+        <field name="prefix">ACTA-</field>
+        <field name="padding">5</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+        <field name="implementation">no_gap</field>
+    </record>
 </odoo>

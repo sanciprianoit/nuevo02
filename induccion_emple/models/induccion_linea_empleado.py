@@ -18,6 +18,17 @@ class InduccionLineaEmpleado(models.Model):
     observacion = fields.Text(string="Observación", help="Comentarios adicionales si el estatus es 'Justificado'")
 
     # =====================================
+    # NUEVO: Número único de control
+    # =====================================
+    control_numero = fields.Char(
+        string="Número de Control",
+        readonly=True,
+        copy=False,
+        index=True,
+        default="Nuevo"
+    )
+
+    # =====================================
     # Campo computado para los items del participante
     # =====================================
     item_ids = fields.One2many(
@@ -62,8 +73,14 @@ class InduccionLineaEmpleado(models.Model):
 
     @api.model
     def create(self, vals):
+        # Seguridad para creación manual
         if not self.env.context.get('allow_create_linea_empleado'):
             raise ValidationError("No está permitido agregar participantes manualmente.")
+
+        # Asignar número de control único
+        if vals.get('control_numero', 'Nuevo') == 'Nuevo':
+            vals['control_numero'] = self.env['ir.sequence'].next_by_code('induccion.linea.empleado.seq') or 'Nuevo'
+
         return super().create(vals)
 
     def unlink(self):

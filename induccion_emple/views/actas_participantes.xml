@@ -7,28 +7,72 @@
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">induccion_emple.report_acta_participante_template</field>
             <field name="report_file">induccion_emple.report_acta_participante_template</field>
-            <field name="print_report_name">'Acta_' + (object.empleado_id.name or 'N/A')</field>
+            <!-- ✅ Ahora el PDF se descarga con el número de control -->
+            <field name="print_report_name">'Acta_' + (object.control_numero or 'N/A')</field>
         </record>
 
         <!-- Plantilla QWeb del reporte de participante -->
         <template id="report_acta_participante_template">
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="linea">
-                    <t t-call="web.external_layout">
+                    <t t-set="company" t-value="user.company_id"/>
+                    <t t-call="web.external_layout_standard">
                         <div class="page">
-                            <h2 style="text-align:center;">Acta de Participante</h2>
 
-                            <p><strong>Empleado:</strong> <t t-esc="linea.empleado_id.name or 'N/A'"/></p>
-                            <p><strong>Inducción:</strong> <t t-esc="linea.induccion_id.nombre or 'N/A'"/></p>
-                            <p><strong>Fecha:</strong> <t t-esc="linea.induccion_id.fecha or 'N/A'"/></p>
-                            <p><strong>Capacitador:</strong> <t t-esc="linea.induccion_id.capacitador_id.display_name or 'N/A'"/></p>
-                            <p><strong>Asistió:</strong> <t t-esc="linea.asistio and 'Sí' or 'No'"/></p>
-                            <p><strong>Estatus:</strong> <t t-esc="linea.estatus or 'N/A'"/></p>
-                            <p><strong>Observación:</strong> <t t-esc="linea.observacion or 'N/A'"/></p>
+                            <!-- 🏛️ Membrete institucional -->
+                            <table style="width:100%; margin-bottom:20px; border:none;">
+                                <tr>
+                                    <td style="text-align:center;">
+                                        <div style="margin-bottom:10px;">
+                                            <img t-att-src="'/web/image/res.company/%s/logo' % company.id" style="max-height:80px;"/>
+                                        </div>
+                                        <h2 style="margin:0;"><span t-field="company.name"/></h2>
+                                        <p style="margin:0; font-size:12px; line-height:1.4;">
+                                            <span t-field="company.street"/>
+                                            <t t-if="company.street2">, <span t-field="company.street2"/></t><br/>
+                                            <span t-field="company.city"/>, <span t-field="company.state_id.name"/> - <span t-field="company.zip"/><br/>
+                                            <t t-if="company.vat">RIF: <span t-field="company.vat"/> |</t>
+                                            Tel: <span t-field="company.phone"/> |
+                                            Email: <span t-field="company.email"/>
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
 
-                            <!-- Tabla de Items de Inducción -->
+                            <!-- Título principal -->
+                            <h2 style="text-align:center;">ACTA DE PARTICIPANTE</h2>
+
+                            <!-- ✅ Datos generales del participante con número de control -->
+                            <table class="table table-sm info-table" style="width:100%; margin-bottom:20px;">
+                                <tr>
+                                    <th style="width:20%;">N° Control:</th>
+                                    <td style="width:30%;"><span t-field="linea.control_numero"/></td>
+                                    <th style="width:20%;">Empleado:</th>
+                                    <td style="width:30%;"><span t-field="linea.empleado_id.name"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Inducción:</th>
+                                    <td><span t-field="linea.induccion_id.nombre"/></td>
+                                    <th>Fecha:</th>
+                                    <td><span t-field="linea.induccion_id.fecha"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Capacitador:</th>
+                                    <td><span t-field="linea.induccion_id.capacitador_id.display_name"/></td>
+                                    <th>Estatus:</th>
+                                    <td><span t-field="linea.estatus"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Asistió:</th>
+                                    <td><t t-esc="linea.asistio and 'Sí' or 'No'"/></td>
+                                    <th>Observación:</th>
+                                    <td><span t-field="linea.observacion"/></td>
+                                </tr>
+                            </table>
+
+                            <!-- Items de Inducción -->
                             <h3>Items de Inducción</h3>
-                            <table class="table table-condensed">
+                            <table class="table table-sm" style="width:100%; margin-top:10px;">
                                 <thead>
                                     <tr>
                                         <th>Item</th>
@@ -38,8 +82,8 @@
                                 <tbody>
                                     <t t-foreach="linea.item_ids" t-as="item">
                                         <tr>
-                                            <td><t t-esc="item.item_id.name or 'N/A'"/></td>
-                                            <td><t t-esc="item.estatus or 'N/A'"/></td>
+                                            <td><span t-field="item.item_id.name"/></td>
+                                            <td><span t-field="item.estatus"/></td>
                                         </tr>
                                     </t>
                                 </tbody>
