@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 
@@ -42,6 +43,8 @@ class Asignacion(models.Model):
 
     descripcion = fields.Text(string='Descripción')
 
+    acta_id = fields.Many2one('induccion_emple.acta_capacitacion', string='Acta de Capacitación')
+
     tipo_nombre = fields.Char(
         string='Tipo',
         compute='_compute_tipo_nombre',
@@ -76,7 +79,6 @@ class Asignacion(models.Model):
 
         asignacion = super(Asignacion, self).create(vals)
 
-        # Crear registro de inducción y participantes
         if asignacion.tipo_registro == 'induccion':
             registro = self.env['induccion.registro'].create({
                 'nombre': asignacion.tipo_nombre,
@@ -89,16 +91,33 @@ class Asignacion(models.Model):
                 'asignacion_id': asignacion.id
             })
 
-            # Crear participantes con contexto autorizado
             for empleado in asignacion.empleado_ids:
                 self.env['induccion.linea.empleado'].with_context(
                     allow_create_linea_empleado=True
                 ).create({
                     'induccion_id': registro.id,
                     'empleado_id': empleado.id,
-                    'asistio': False,          # Por defecto no asistió
-                    'estatus': 'no_asistio'    # Estado inicial
+                    'asistio': False,
+                    'estatus': 'no_asistio'
                 })
+
+        elif asignacion.tipo_registro == 'capacitacion':
+            acta = self.env['induccion_emple.acta_capacitacion'].create({
+                'asignacion_id': asignacion.id,
+                'capacitador_id': asignacion.capacitador_id.id,
+                'tipo_id': asignacion.tipo_capacitacion_id.id,
+                'fecha': asignacion.fecha_asignacion,
+            })
+
+            asistencia_records = []
+            for empleado in asignacion.empleado_ids:
+                asistencia_records.append((0, 0, {
+                    'participante_id': empleado.id,
+                    'status': 'presente',
+                    'observacion': '',
+                }))
+            acta.asistencia_ids = asistencia_records
+            asignacion.acta_id = acta.id
 
         return asignacion
 
@@ -109,3 +128,31 @@ class Asignacion(models.Model):
                 raise ValidationError("El tipo de inducción es obligatorio para una inducción.")
             if record.tipo_registro == 'capacitacion' and not record.tipo_capacitacion_id:
                 raise ValidationError("El tipo de capacitación es obligatorio para una capacitación.")
+
+    def action_generar_acta(self):
+        self.ensure_one()
+        acta = self.env['induccion_emple.acta_capacitacion'].create({
+            'asignacion_id': self.id,
+            'capacitador_id': self.capacitador_id.id,
+            'tipo_id': self.tipo_capacitacion_id.id,
+            'fecha': self.fecha_asignacion,
+        })
+
+        asistencia_records = []
+        for empleado in self.empleado_ids:
+            asistencia_records.append((0, 0, {
+                'participante_id': empleado.id,
+                'status': 'presente',
+                'observacion': '',
+            }))
+        acta.asistencia_ids = asistencia_records
+        self.acta_id = acta.id
+
+        return {
+            'name': 'Acta de Capacitación',
+            'type': 'ir.actions.act_window',
+            'res_model': 'induccion_emple.acta_capacitacion',
+            'view_mode': 'form',
+            'res_id': acta.id,
+            'target': 'current',
+        }

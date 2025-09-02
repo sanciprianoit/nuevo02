@@ -73,4 +73,12 @@
         parent="menu_generar_acta_induccion" 
         action="action_acta_induccion" 
         sequence="10"/>
+
+         <menuitem
+        id="menu_acta_capacitacion"
+        name="Acta de Capacitación"
+        parent="menu_generar_acta_induccion"
+        action="action_acta_capacitacion"
+        sequence="20"
+    />
 </odoo>

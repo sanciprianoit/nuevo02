@@ -16,17 +16,18 @@
     'views/tipo_induccion_views.xml',  
     'views/tipo_capacitacion_views.xml',
     'views/capacitador_views.xml', 
-    'views/action_asignacion.xml',         # ✅ debe ir antes
+    'views/action_asignacion.xml',
     'views/asignacion_views.xml',
-    'views/menu.xml',
-    'views/asignacion_report_button.xml',
-    'reports/asignacion_report.xml',
     'views/asignacion_capacitacion_views.xml',
     'views/acta.xml',
+    'views/acta_capacitacion_views.xml',  # ✅ Mover esto antes del menú
+    'views/menu.xml',                     # ✅ Ahora se carga después
+    'views/asignacion_report_button.xml',
+    'reports/asignacion_report.xml',
     'views/report_acta_induccion.xml',
     'views/actas_participantes.xml',
-
 ],
+
 
      'assets': {
         'web.report_assets_common': [
