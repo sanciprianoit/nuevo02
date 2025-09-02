@@ -36,7 +36,8 @@
                         <notebook>
                             <page string="Asistencia de Participantes">
                                 <field name="asistencia_ids">
-                                    <list editable="bottom" create="false">
+                                    <!-- No se permite eliminar, solo editar -->
+                                    <list editable="bottom" create="false" delete="false">
                                         <field name="participante_id"/>
                                         <field name="status" widget="selection"/>
                                         <field name="observacion"/>
