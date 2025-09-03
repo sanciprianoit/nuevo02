@@ -75,9 +75,11 @@ class InduccionRegistro(models.Model):
 
     def unlink(self):
         for record in self:
-            if record.linea_empleado_ids:
-                raise UserError(_("No se puede eliminar un registro con empleados asignados."))
-        return super().unlink()
+            # 🔐 Eliminación controlada de líneas hijas con validaciones contextuales
+            record.linea_empleado_ids.with_context(allow_unlink_empleado_acta=True).unlink()
+            record.item_line_ids.with_context(allow_unlink_linea_item=True).unlink()
+            super(InduccionRegistro, record).unlink()
+        return True
 
     def action_imprimir_acta(self):
         """Genera un PDF del registro de inducción"""
@@ -92,7 +94,6 @@ class InduccionRegistro(models.Model):
         if not empleados:
             raise UserError(_("No hay participantes en este registro para imprimir actas."))
 
-        # Genera un PDF para cada empleado
         report_action_list = []
         for empleado in empleados:
             if not empleado:
@@ -100,6 +101,4 @@ class InduccionRegistro(models.Model):
             action = self.env.ref('induccion_emple.action_report_acta_participante').report_action(empleado)
             report_action_list.append(action)
 
-        # Devuelve un solo PDF combinado si quieres, o la acción del primer empleado
-        # Para simplificar, devolvemos la acción del primer empleado
         return report_action_list[0] if report_action_list else False
