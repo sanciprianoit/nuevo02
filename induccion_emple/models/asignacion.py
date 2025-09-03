@@ -62,14 +62,64 @@ class Asignacion(models.Model):
                 record.tipo_nombre = ''
 
     def print_asignacion_induccion(self):
+        self.ensure_one()
+
+        if not self._origin or not self._origin.id:
+            raise ValidationError("Debes guardar el registro antes de imprimir los ítems.")
+
+        if self.tipo_registro != 'induccion':
+            raise ValidationError("Este botón solo aplica para registros de tipo inducción.")
+
+        if not all([
+            self.tipo_induccion_id,
+            self.fecha_asignacion,
+            self.capacitador_id,
+            self.empleado_ids
+        ]):
+            raise ValidationError("Debes completar todos los campos requeridos antes de imprimir los ítems.")
+
         return self.env.ref('induccion_reportes.action_report_asignacion_items').report_action(self)
 
     def print_asignacion_induccion_participantes(self):
+        self.ensure_one()
+
+        if not self._origin or not self._origin.id:
+            raise ValidationError("Debes guardar el registro antes de imprimir los participantes.")
+
+        if self.tipo_registro != 'induccion':
+            raise ValidationError("Este botón solo aplica para registros de tipo inducción.")
+
+        if not all([
+            self.tipo_induccion_id,
+            self.fecha_asignacion,
+            self.capacitador_id,
+            self.empleado_ids
+        ]):
+            raise ValidationError("Debes completar todos los campos requeridos antes de imprimir los participantes.")
+
         return self.env.ref('induccion_reportes.action_report_asignacion_participantess').report_action(self)
+
+    def action_imprimir_acta_capacitacion(self):
+        self.ensure_one()
+
+        if not self._origin or not self._origin.id:
+            raise ValidationError("Debes guardar el registro antes de imprimir el acta.")
+
+        if self.tipo_registro != 'capacitacion':
+            raise ValidationError("Este botón solo aplica para registros de tipo capacitación.")
+
+        if not all([
+            self.tipo_capacitacion_id,
+            self.fecha_asignacion,
+            self.capacitador_id,
+            self.empleado_ids
+        ]):
+            raise ValidationError("Debes completar todos los campos requeridos antes de imprimir el acta de capacitación.")
+
+        return self.env.ref('induccion_emple.action_report_asignacion_capacitacion').report_action(self)
 
     @api.model
     def create(self, vals):
-        # Generar número de control
         if vals.get('control_numero', 'Nuevo') == 'Nuevo':
             if vals.get('tipo_registro') == 'capacitacion':
                 seq = self.env['ir.sequence'].next_by_code('induccion_emple.capacitacion')

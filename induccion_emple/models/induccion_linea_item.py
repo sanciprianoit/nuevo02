@@ -27,6 +27,8 @@ class InduccionLineaItem(models.Model):
             raise ValidationError("No está permitido agregar items manualmente.")
         return super().create(vals)
 
-    # Bloquear eliminación manual
+    # Bloquear eliminación manual, permitir desde el padre con contexto
     def unlink(self):
-        raise ValidationError("No está permitido eliminar items manualmente.")
+        if not self.env.context.get('allow_unlink_linea_item'):
+            raise ValidationError("No está permitido eliminar items manualmente.")
+        return super().unlink()

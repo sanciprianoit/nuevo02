@@ -8,7 +8,11 @@ class InduccionLineaEmpleado(models.Model):
     # ===========================
     # Campos principales
     # ===========================
-    induccion_id = fields.Many2one('induccion.registro', string='Inducción', ondelete='cascade')
+    induccion_id = fields.Many2one(
+        'induccion.registro',
+        string='Inducción',
+        ondelete='cascade'
+    )
     empleado_id = fields.Many2one('hr.employee', string='Empleado', required=True)
     asistio = fields.Boolean(string="¿Asistió?")
     estatus = fields.Selection([
@@ -51,12 +55,9 @@ class InduccionLineaEmpleado(models.Model):
     @api.depends('induccion_id')
     def _compute_item_ids(self):
         for record in self:
-            if record.induccion_id:
-                record.item_ids = self.env['induccion.linea.item'].search([
-                    ('registro_id', '=', record.induccion_id.id)
-                ])
-            else:
-                record.item_ids = self.env['induccion.linea.item']
+            record.item_ids = self.env['induccion.linea.item'].search([
+                ('registro_id', '=', record.induccion_id.id)
+            ]) if record.induccion_id else self.env['induccion.linea.item']
 
     # ===========================
     # Reglas de negocio
@@ -66,9 +67,8 @@ class InduccionLineaEmpleado(models.Model):
         for record in self:
             if record.asistio:
                 record.estatus = 'asistio'
-            else:
-                if record.estatus == 'asistio':
-                    record.estatus = 'no_asistio'
+            elif record.estatus == 'asistio':
+                record.estatus = 'no_asistio'
 
     @api.constrains('estatus', 'observacion')
     def _check_observacion_if_justificado(self):
@@ -84,28 +84,27 @@ class InduccionLineaEmpleado(models.Model):
 
     @api.model
     def create(self, vals):
-        # Seguridad para creación manual
         if not self.env.context.get('allow_create_linea_empleado'):
             raise ValidationError("No está permitido agregar participantes manualmente.")
 
-        # Asignar número de control único
         if vals.get('control_numero', 'Nuevo') == 'Nuevo':
             vals['control_numero'] = self.env['ir.sequence'].next_by_code('induccion.linea.empleado.seq') or 'Nuevo'
 
         return super().create(vals)
 
     def unlink(self):
-        raise ValidationError("No está permitido eliminar participantes.")
+        for record in self:
+            if record.fecha_ejecucion and not self.env.context.get('allow_unlink_empleado_acta'):
+                raise ValidationError("No se puede eliminar un participante con acta ejecutada.")
+        return super().unlink()
 
     # ===========================
     # Generar PDF individual
     # ===========================
     def action_print_acta_individual(self):
-        """Genera el PDF solo de este participante y guarda fecha de ejecución"""
         if not self:
             raise UserError("No hay participante seleccionado para imprimir el acta.")
 
-        # Guardar la fecha actual de ejecución
         self.fecha_ejecucion = fields.Datetime.now()
 
         return self.env.ref('induccion_emple.action_report_acta_participante').report_action(self)

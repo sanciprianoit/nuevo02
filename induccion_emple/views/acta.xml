@@ -4,7 +4,7 @@
         <field name="name">induccion.registro.list</field>
         <field name="model">induccion.registro</field>
         <field name="arch" type="xml">
-            <list create="false" delete="false" edit="false">
+            <list create="false" edit="false">
                 <field name="control_numero"/>
                 <field name="nombre"/>
                 <field name="fecha"/>
@@ -28,7 +28,6 @@
                         <field name="descripcion"/>
                     </group>
 
-                    <!-- Participantes con estatus -->
                     <group string="Participantes">
                         <field name="linea_empleado_ids">
                             <list editable="top" create="false" delete="false">
@@ -36,8 +35,6 @@
                                 <field name="asistio"/>
                                 <field name="estatus"/>
                                 <field name="observacion" attrs="{'invisible': [('estatus', '!=', 'justificado')]}"/>
-
-                                <!-- Botón para imprimir acta individual -->
                                 <button name="action_print_acta_individual"
                                         string="Imprimir Acta"
                                         type="object"
@@ -46,7 +43,6 @@
                         </field>
                     </group>
 
-                    <!-- Items del registro con estatus editable -->
                     <group string="Items del Registro">
                         <field name="item_line_ids">
                             <list editable="top" create="false" delete="false">
