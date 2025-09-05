@@ -1,0 +1,16 @@
+<odoo>
+    <data noupdate="1">
+        <!-- Grupo Usuario -->
+        <record id="group_induccion_user" model="res.groups">
+            <field name="name">Usuario Inducción</field>
+            <field name="category_id" ref="base.module_category_human_resources"/>
+        </record>
+
+        <!-- Grupo Administrador -->
+        <record id="group_induccion_manager" model="res.groups">
+            <field name="name">Administrador Inducción</field>
+            <field name="category_id" ref="base.module_category_human_resources"/>
+            <field name="implied_ids" eval="[(4, ref('induccion_emple.group_induccion_user'))]"/>
+        </record>
+    </data>
+</odoo>

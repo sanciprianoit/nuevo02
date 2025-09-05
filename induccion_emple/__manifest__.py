@@ -12,6 +12,7 @@
     'depends': ['base', 'hr', 'web'],
 
     'data': [
+        'security/induccion_security.xml',
         'security/ir.model.access.csv',
         'data/ir_sequence_data.xml',
         'views/tipo_induccion_views.xml',  
