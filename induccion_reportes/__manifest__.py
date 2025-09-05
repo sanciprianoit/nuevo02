@@ -31,6 +31,9 @@
         'reports/asignacion_report_templates.xml',
         
     ],
+
+     'images': ['static/description/icon.png'],
+
     'installable': True,
     'application': False,
     'auto_install': False,
